@@ -9,14 +9,15 @@ public class Main {
         try {
             Main m = new Main();
             List<String> lines = getStringFromStream(new FileInputStream(args[0]));
-            PriorityQueue<Edge> edges = new PriorityQueue<>();
-            List<Node> nodes = new ArrayList<>();
-            //m.read(lines, edges, nodes);
+            List<Edge> edges = new LinkedList<>();
+            HashMap<String,Node> nodes = new HashMap<>();
+           //m.read(lines, edges, nodes);
 
+
+            m.read(lines, edges, nodes);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        
     }
 
     class MST {
@@ -30,16 +31,26 @@ public class Main {
             this.accualEdges = new ArrayList<>();
         }
 
-        public void solve() {
 
+        /**
+         * Solves this MST with prims algorithm.
+         * @param start
+         */
+        public void solve(Node start) {
+            if(!nodes.contains(start)) {
+                System.err.println("Starting node not present in graph.");
+                return;
+            }
         }
     }
 
     class Node {
         String label;
+        HashMap<Node, Integer> neighbors;
 
-        public Node(String label) {
+        Node(String label) {
             this.label = label;
+            this.neighbors = new HashMap();
         }
     }
 
@@ -48,7 +59,7 @@ public class Main {
         Node first;
         Node second;
 
-        public Edge(Node first, Node second, int weight) {
+        Edge(Node first, Node second, int weight) {
             this.first = first;
             this.second = second;
             this.weight = weight;
@@ -64,8 +75,10 @@ public class Main {
     /*
      * The whole files contents should be passed to this function. //TODO ska nodes vara i en lista?
      */
+    //public void read(List<String> string, List<Edge> edges, List<Node> nodes) {
 
-    public void read(List<String> stringList, PriorityQueue<Edge> edges, HashMap<String,Node> nodeMap) {
+
+    public void read(List<String> stringList, List<Edge> edges, HashMap<String,Node> nodeMap) {
         Boolean readingEdges=false;
         for (String row: stringList) {
             if (row.charAt(row.length()-1)==']') {
