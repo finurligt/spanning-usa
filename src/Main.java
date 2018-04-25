@@ -22,10 +22,10 @@ public class Main {
     /*
      * The whole files contents should be passed to this function
      */
-    public void read(String string) {
-        String[] split = string.split("\n");
+    public void read(List<String> string) {
+
         Boolean readingEdges=false;
-        for (String row: split) {
+        for (String row: string) {
             if (row.charAt(row.length()-1)==']') {
                 readingEdges = true;
             }
