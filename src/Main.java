@@ -17,6 +17,8 @@ public class Main {
         }
         
     }
+
+
    
     private class Node {
         int setId;
@@ -59,7 +61,9 @@ public class Main {
 
             if(!readingEdges) {
                 //läs nod
+                
             } else {
+                //läs edge
 
             }
         }
