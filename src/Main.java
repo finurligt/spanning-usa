@@ -1,9 +1,8 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Main {
 
@@ -11,34 +10,49 @@ public class Main {
         try {
             Main m = new Main();
             List<String> lines = getStringFromStream(new FileInputStream(args[0]));
-            m.read(lines);
+            PriorityQueue<Edge> edges = new PriorityQueue<>();
+            List<Node> nodes = new ArrayList<>();
+            m.read(lines, edges, nodes);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         
     }
 
+    class MST {
+        PriorityQueue possibleEdges;
+        List<Node> nodes;
+        List<Edge> accualEdges;
 
-   
-    private class Node {
-        int setId;
+        public MST(PriorityQueue possibleEdges, List<Node> nodes) {
+            this.possibleEdges = possibleEdges;
+            this.nodes = nodes;
+            this.accualEdges = new ArrayList<>();
+        }
+
+        public void solve() {
+
+        }
+    }
+
+    class Node {
         String label;
 
-        public Node(int setId, String label) {
-            this.setId = setId;
+        public Node(String label) {
             this.label = label;
         }
     }
 
-    private class Edge implements Comparable<Edge>{
+    class Edge implements Comparable<Edge>{
         int weight;
         Node first;
         Node second;
 
-        public Edge(int weight, Node first, Node second) {
-            this.weight = weight;
+        public Edge(Node first, Node second, int weight) {
             this.first = first;
             this.second = second;
+            this.weight = weight;
         }
 
         @Override
@@ -49,9 +63,9 @@ public class Main {
 
 
     /*
-     * The whole files contents should be passed to this function
+     * The whole files contents should be passed to this function. //TODO ska nodes vara i en lista?
      */
-    public void read(List<String> string) {
+    public void read(List<String> string, PriorityQueue<Edge> edges, List<Node> nodes) {
 
         Boolean readingEdges=false;
         for (String row: string) {
@@ -63,10 +77,23 @@ public class Main {
                 //läs nod
                 
             } else {
-                //läs edge
-
+                edges.add(parseEdgeString(row));
             }
         }
+    }
+
+    private Edge parseEdgeString(String edgeStr) {
+        String[] strings = edgeStr.split(" ");
+
+        //Stadsnamnen ligger i split[0]
+        String[] labels = strings[0].split("--");
+        String firstLabel = labels[0];
+        String secondLabel = labels[1];
+
+        //Weighten ligger i split[1]
+        String weightStr = strings[1].replace("[", "").replace("]", "");
+        int weight = Integer.parseInt(weightStr);
+        return new Edge(new Node(firstLabel), new Node(secondLabel), weight);
     }
 
 
