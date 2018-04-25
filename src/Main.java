@@ -7,28 +7,43 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+
+
+
             Main m = new Main();
             List<String> lines = getStringFromStream(new FileInputStream(args[0]));
             List<Edge> edges = new LinkedList<>();
             HashMap<String,Node> nodes = new HashMap<>();
-           //m.read(lines, edges, nodes);
 
 
-            m.read(lines, edges, nodes);
+            m.read(lines, nodes);
+            MST mst = new MST();
+            HashSet a = new HashSet<Node>();
+            for (Map.Entry n : nodes.entrySet()) {
+                a.add(n.getValue());
+            }
+
+            System.out.println(mst.solve(nodes.values().iterator().next(), a));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    class MST {
-        PriorityQueue possibleEdges;
-        List<Node> nodes;
-        List<Edge> accualEdges;
+    static class MST {
+        PriorityQueue<Edge> possibleEdges;
+        HashSet<Node> nodes;
+        //List<Edge> actualEdges;
 
-        public MST(PriorityQueue possibleEdges, List<Node> nodes) {
+        public MST(PriorityQueue<Edge> possibleEdges, HashSet<Node> nodes) {
             this.possibleEdges = possibleEdges;
             this.nodes = nodes;
-            this.accualEdges = new ArrayList<>();
+            //this.actualEdges = new ArrayList<>();
+        }
+
+        public MST() {
+            this.possibleEdges = new PriorityQueue<>();
+            this.nodes = new HashSet<>();
+            //this.actualEdges = new ArrayList<>();
         }
 
 
@@ -36,22 +51,46 @@ public class Main {
          * Solves this MST with prims algorithm.
          * @param start
          */
-        public void solve(Node start) {
-            if(!nodes.contains(start)) {
+        public int solve(Node start, Set<Node> nodeSet) {     //allready changed ID when called upon, maybe in creation of edge?
+
+
+            if(!nodeSet.contains(start)) {
                 System.err.println("Starting node not present in graph.");
-                return;
+                return -1;
             }
+                                                           //allready changed ID here
+            possibleEdges.addAll(start.neighbors);
+            nodeSet.remove(start);
+
+            int counter = 0;
+            while(!nodeSet.isEmpty()) {
+                Edge newEdge = possibleEdges.poll();
+
+                if (nodeSet.contains(newEdge.second)) {    //this never happens, nodes have changed ID by this point
+                    //new node is not visited
+
+                    nodeSet.remove(newEdge.second);
+                    possibleEdges.addAll(newEdge.second.neighbors);
+
+                    counter += newEdge.weight;
+
+                }
+
+            }
+            return counter;
+
         }
     }
 
     class Node {
         String label;
-        HashMap<Node, Integer> neighbors;
+        List<Edge> neighbors;
 
         Node(String label) {
             this.label = label;
-            this.neighbors = new HashMap();
+            this.neighbors = new LinkedList<Edge>();
         }
+
     }
 
     class Edge implements Comparable<Edge>{
@@ -69,6 +108,10 @@ public class Main {
         public int compareTo(Edge edge) {
             return this.weight - edge.weight;
         }
+        @Override
+        public String toString() {
+            return this.first.label + " -- " +this.second.label;
+        }
     }
 
 
@@ -78,33 +121,41 @@ public class Main {
     //public void read(List<String> string, List<Edge> edges, List<Node> nodes) {
 
 
-    public void read(List<String> stringList, List<Edge> edges, HashMap<String,Node> nodeMap) {
+    public void read(List<String> stringList, HashMap<String,Node> nodeMap) {
         Boolean readingEdges=false;
         for (String row: stringList) {
+            row=row.trim();
             if (row.charAt(row.length()-1)==']') {
                 readingEdges = true;
             }
 
             if(!readingEdges) {
-                nodeMap.put(row,new Node(row));
+                //reading nodes
+                nodeMap.put(row,new Node(row.trim()));
             } else {
-                //läs edge
+                Edge edge = parseEdgeString(row,nodeMap);
+
+
+
+                nodeMap.get(edge.first.label).neighbors.add(edge);
+                nodeMap.get(edge.second.label).neighbors.add(new Edge(edge.second,edge.first,edge.weight));
+                //flipping edge for second node
+                //if node in map can't be find something is wrong in reading nodes
             }
         }
     }
 
-    private Edge parseEdgeString(String edgeStr) {
-        String[] strings = edgeStr.split(" ");
+    private Edge parseEdgeString(String edgeStr, HashMap<String, Node> nodeMap) {
+        edgeStr = edgeStr.replace("]","");
+        String[] strings = edgeStr.split("--|\\[");
+        //strings ser nu ut som ("Namn1", ""Längre namn2" ", "123"), notice the space in name 2
 
-        //Stadsnamnen ligger i split[0]
-        String[] labels = strings[0].split("--");
-        String firstLabel = labels[0];
-        String secondLabel = labels[1];
-
-        //Weighten ligger i split[1]
-        String weightStr = strings[1].replace("[", "").replace("]", "");
+        String firstLabel = strings[0];
+        String secondLabel = strings[1].trim();
+        String weightStr = strings[2];
         int weight = Integer.parseInt(weightStr);
-        return new Edge(new Node(firstLabel), new Node(secondLabel), weight);
+        return new Edge(nodeMap.get(firstLabel), nodeMap.get(secondLabel), weight);
+
     }
 
 
