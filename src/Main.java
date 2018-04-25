@@ -1,9 +1,7 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -51,17 +49,18 @@ public class Main {
     /*
      * The whole files contents should be passed to this function
      */
-    public void read(List<String> string) {
+    public void read(List<String> stringList) {
 
         Boolean readingEdges=false;
-        for (String row: string) {
+        Map<Node,Edge> neighborMap = new HashMap<Node,Edge>();
+        for (String row: stringList) {
             if (row.charAt(row.length()-1)==']') {
                 readingEdges = true;
             }
 
             if(!readingEdges) {
                 //läs nod
-                
+                neighborMap.put(new Node())
             } else {
                 //läs edge
 
