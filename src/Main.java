@@ -18,7 +18,14 @@ public class Main {
         
     }
    
+    private class Node {
+        int setId;
+    }
 
+    private class Edge {
+        Node first;
+        Node second;
+    }
 
 
     /*
