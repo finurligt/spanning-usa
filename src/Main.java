@@ -20,12 +20,24 @@ public class Main {
    
     private class Node {
         int setId;
+        String label;
+
+        public Node(int setId, String label) {
+            this.setId = setId;
+            this.label = label;
+        }
     }
 
     private class Edge {
         int weight;
         Node first;
         Node second;
+
+        public Edge(int weight, Node first, Node second) {
+            this.weight = weight;
+            this.first = first;
+            this.second = second;
+        }
     }
 
 
