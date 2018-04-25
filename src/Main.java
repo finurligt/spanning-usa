@@ -28,7 +28,7 @@ public class Main {
         }
     }
 
-    private class Edge {
+    private class Edge implements Comparable<Edge>{
         int weight;
         Node first;
         Node second;
@@ -37,6 +37,11 @@ public class Main {
             this.weight = weight;
             this.first = first;
             this.second = second;
+        }
+
+        @Override
+        public int compareTo(Edge edge) {
+            return this.weight - edge.weight;
         }
     }
 
@@ -55,7 +60,7 @@ public class Main {
             if(!readingEdges) {
                 //läs nod
             } else {
-                //läs edge
+
             }
         }
     }
