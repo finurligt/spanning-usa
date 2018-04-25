@@ -9,7 +9,9 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+            Main m = new Main();
             List<String> lines = getStringFromStream(new FileInputStream(args[0]));
+            m.read(lines);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
