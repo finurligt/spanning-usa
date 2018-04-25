@@ -1,4 +1,5 @@
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +8,11 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        List<String> lines = getStringFromStream(new FileInputStream(args[0]));
+        try {
+            List<String> lines = getStringFromStream(new FileInputStream(args[0]));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         
     }
    
