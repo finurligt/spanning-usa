@@ -23,6 +23,7 @@ public class Main {
     }
 
     private class Edge {
+        int weight;
         Node first;
         Node second;
     }
