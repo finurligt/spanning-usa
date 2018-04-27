@@ -3,18 +3,14 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.*;
 
-public class Main {
+public class spanning {
 
     public static void main(String[] args) {
         try {
-
-
-
-            Main m = new Main();
+            spanning m = new spanning();
             List<String> lines = getStringFromStream(new FileInputStream(args[0]));
             List<Edge> edges = new LinkedList<>();
             HashMap<String,Node> nodes = new HashMap<>();
-
 
             m.read(lines, nodes);
             MST mst = new MST();
@@ -32,18 +28,15 @@ public class Main {
     static class MST {
         PriorityQueue<Edge> possibleEdges;
         HashSet<Node> nodes;
-        //List<Edge> actualEdges;
 
         public MST(PriorityQueue<Edge> possibleEdges, HashSet<Node> nodes) {
             this.possibleEdges = possibleEdges;
             this.nodes = nodes;
-            //this.actualEdges = new ArrayList<>();
         }
 
         public MST() {
             this.possibleEdges = new PriorityQueue<>();
             this.nodes = new HashSet<>();
-            //this.actualEdges = new ArrayList<>();
         }
 
 
@@ -71,7 +64,7 @@ public class Main {
 
                     nodeSet.remove(newEdge.second);
                     possibleEdges.addAll(newEdge.second.neighbors);
-
+                    //System.err.println(newEdge);
                     counter += newEdge.weight;
 
                 }
@@ -116,11 +109,8 @@ public class Main {
 
 
     /*
-     * The whole files contents should be passed to this function. //TODO ska nodes vara i en lista?
+     * The whole files contents should be passed to this function. 
      */
-    //public void read(List<String> string, List<Edge> edges, List<Node> nodes) {
-
-
     public void read(List<String> stringList, HashMap<String,Node> nodeMap) {
         Boolean readingEdges=false;
         for (String row: stringList) {
@@ -135,12 +125,10 @@ public class Main {
             } else {
                 Edge edge = parseEdgeString(row,nodeMap);
 
-
-
-                nodeMap.get(edge.first.label).neighbors.add(edge);
-                nodeMap.get(edge.second.label).neighbors.add(new Edge(edge.second,edge.first,edge.weight));
                 //flipping edge for second node
                 //if node in map can't be find something is wrong in reading nodes
+                nodeMap.get(edge.first.label).neighbors.add(edge);
+                nodeMap.get(edge.second.label).neighbors.add(new Edge(edge.second,edge.first,edge.weight));
             }
         }
     }
@@ -160,7 +148,7 @@ public class Main {
 
 
     /*
-     * This function reads a file 
+     * This function reads a file
      */
     public static List<String> getStringFromStream(InputStream is) {
         Scanner sc = new Scanner(is);
